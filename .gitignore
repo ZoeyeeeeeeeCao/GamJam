@@ -11,8 +11,8 @@
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 *.log
-GamJam/Assets/OnlineAssets/
-GamJam/Assets/OnlineAssets.meta
+GameJam/Assets/OnlineAssets/
+GameJam/Assets/OnlineAssets.meta
 
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
