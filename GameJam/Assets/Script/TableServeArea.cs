@@ -27,6 +27,7 @@ public class TableServeArea : MonoBehaviour
             food.transform.rotation = platePoint.rotation;
         }
 
+        // 恢复刚体物理
         var rb = food.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -37,30 +38,17 @@ public class TableServeArea : MonoBehaviour
         Debug.Log("把食物放在桌子上：" + food.name);
 
         // 从等待区域拿到当前这桌顾客
-        CustomerOrderUI customerOrderUI = (waitArea != null) ? waitArea.CurrentCustomerUI : null;
+        CustomerOrderUI customerOrderUI =
+            (waitArea != null) ? waitArea.CurrentCustomerUI : null;
 
         if (customerOrderUI != null)
         {
-            var reaction = customerOrderUI.EvaluateFood(food.foodPrefabId);
+            // 1. 判断这道菜对不对
+            CustomerReactionType reaction =
+                customerOrderUI.EvaluateFood(food.foodPrefabId);
 
-            switch (reaction)
-            {
-                case CustomerReactionType.Reaction1:
-                    Debug.Log("Reaction1：上对菜，顾客开心 😊");
-                    break;
-
-                case CustomerReactionType.Reaction2:
-                    Debug.Log("Reaction2：下毒菜，顾客倒地 😵");
-                    break;
-
-                case CustomerReactionType.Reaction3:
-                    Debug.Log("Reaction3：上错菜，顾客生气 😡");
-                    break;
-
-                default:
-                    Debug.Log("顾客还没点单 / 无效上菜");
-                    break;
-            }
+            // 2. 让顾客自己执行对应反应
+            customerOrderUI.PlayReaction(reaction);
         }
         else
         {

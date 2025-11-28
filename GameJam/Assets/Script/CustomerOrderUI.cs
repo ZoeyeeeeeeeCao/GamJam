@@ -149,4 +149,34 @@ public class CustomerOrderUI : MonoBehaviour
             }
         }
     }
+    public void PlayReaction(CustomerReactionType reaction)
+    {
+        switch (reaction)
+        {
+            case CustomerReactionType.Reaction1:
+                Debug.Log("顾客开心：正确的食物！");
+                // TODO: 播放开心动画
+                // TODO: 播放开心音效
+                // TODO: 改表情UI，例如变成笑脸
+                break;
+
+            case CustomerReactionType.Reaction2:
+                Debug.Log("顾客倒地：你给了下毒食物！");
+                // TODO: 播放倒地动画（比如播放 RagDoll）
+                // TODO: 播放惊叫/死亡音效
+                // TODO: UI 显示骷髅头图标
+                break;
+
+            case CustomerReactionType.Reaction3:
+                Debug.Log("顾客生气：食物完全错误！");
+                // TODO: 播放生气动画（跺脚/生气表情）
+                // TODO: 播放生气音效
+                // TODO: UI 出现 angry bubble
+                break;
+        }
+
+        // 如果你想让顾客反应后离开，就在这里调用：
+        // StartCoroutine(CustomerLeaveRoutine());
+    }
+
 }
