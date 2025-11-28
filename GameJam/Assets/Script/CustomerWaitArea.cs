@@ -1,44 +1,56 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CustomerWaitArea : MonoBehaviour
 {
-    [Header("ÒıÓÃ")]
-    public Transform customer;         // costumer ÎïÌå£¨Í·¶¥UI¸ú×ÅËü£©
-    public Image loadingCircle;        // Ô²ĞÎ¼ÓÔØÌõ£¨Radial£©
-    public Image finalIcon;            // 10Ãëºó³öÏÖµÄÍ¼Æ¬
+    [Header("å¼•ç”¨")]
+    public Transform customer;
+    public Image loadingCircle;
+    public Image[] finalIcons;
 
-    [Header("ÉèÖÃ")]
-    public float waitTime = 10f;       // µÈ´ıÊ±¼ä£¨Ãë£©
+    [Header("è®¾ç½®")]
+    public float waitTime = 10f;
     public string playerTag = "Player";
+    public string customerTag = "Customer";
 
-    private bool playerInside = false; // Íæ¼ÒÊÇ·ñÔÚÇøÓòÄÚ
-    private bool isCounting = false;   // ÊÇ·ñÕıÔÚ¼ÆÊ±
-    private bool completed = false;    // ÊÇ·ñÒÑ¾­Íê³É¹ıÒ»´Î
+    private bool playerInside = false;
+    private bool customerInside = false; // â­ costumer æ˜¯å¦åœ¨åŒºåŸŸå†…
+    private bool isCounting = false;
+    private bool completed = false;
     private Coroutine waitCoroutine;
 
     private void Start()
     {
-        // ³õÊ¼×´Ì¬£ºÒş²Ø½ø¶ÈÌõºÍ×îÖÕÍ¼Æ¬
         if (loadingCircle != null)
         {
             loadingCircle.fillAmount = 0f;
             loadingCircle.gameObject.SetActive(false);
         }
-        if (finalIcon != null)
-        {
-            finalIcon.gameObject.SetActive(false);
-        }
+
+        HideAllFinalIcons();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // ç©å®¶è¿›å…¥
         if (other.CompareTag(playerTag) && !completed)
         {
             playerInside = true;
 
-            if (!isCounting)
+            // åªæœ‰å½“ customer ä¹Ÿåœ¨åœºæ—¶æ‰å¼€å§‹è®¡æ—¶
+            if (customerInside && !isCounting)
+            {
+                waitCoroutine = StartCoroutine(WaitAndShowIcon());
+            }
+        }
+        // Customer è¿›å…¥
+        else if (other.CompareTag(customerTag) && !completed)
+        {
+            customerInside = true;
+
+            // å¦‚æœç©å®¶å·²ç»åœ¨åœˆé‡Œï¼Œä¹Ÿå¯ä»¥é©¬ä¸Šå¼€å§‹è®¡æ—¶
+            if (playerInside && !isCounting)
             {
                 waitCoroutine = StartCoroutine(WaitAndShowIcon());
             }
@@ -47,17 +59,28 @@ public class CustomerWaitArea : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        // ç©å®¶ç¦»å¼€
         if (other.CompareTag(playerTag))
         {
             playerInside = false;
+            StopCountingIfNeeded();
+        }
+        // Customer ç¦»å¼€
+        else if (other.CompareTag(customerTag))
+        {
+            customerInside = false;
+            StopCountingIfNeeded();
+        }
+    }
 
-            // Íæ¼ÒÀë¿ª¾ÍÖĞ¶Ï¼ÆÊ±²¢ÖØÖÃUI
-            if (waitCoroutine != null && !completed)
-            {
-                StopCoroutine(waitCoroutine);
-                isCounting = false;
-            }
-
+    private void StopCountingIfNeeded()
+    {
+        // åªè¦è¿˜æ²¡å®Œæˆï¼Œå°±æ‰“æ–­è®¡æ—¶å¹¶é‡ç½® UI
+        if (waitCoroutine != null && !completed)
+        {
+            StopCoroutine(waitCoroutine);
+            waitCoroutine = null;
+            isCounting = false;
             ResetUI();
         }
     }
@@ -72,17 +95,14 @@ public class CustomerWaitArea : MonoBehaviour
             loadingCircle.fillAmount = 0f;
         }
 
-        if (finalIcon != null)
-        {
-            finalIcon.gameObject.SetActive(false);
-        }
+        HideAllFinalIcons();
 
         float timer = 0f;
 
         while (timer < waitTime)
         {
-            // Èç¹ûÍæ¼ÒÖĞÍ¾Àë¿ª£¬ÍË³ö
-            if (!playerInside)
+            // ä¸­é€”åªè¦ player æˆ– customer æœ‰ä¸€æ–¹ä¸åœ¨ï¼Œç›´æ¥é€€å‡º
+            if (!playerInside || !customerInside)
             {
                 isCounting = false;
                 yield break;
@@ -99,18 +119,15 @@ public class CustomerWaitArea : MonoBehaviour
             yield return null;
         }
 
-        // ¼ÆÊ±½áÊø
+        // è®¡æ—¶ç»“æŸ
         if (loadingCircle != null)
         {
             loadingCircle.gameObject.SetActive(false);
         }
 
-        if (finalIcon != null)
-        {
-            finalIcon.gameObject.SetActive(true);
-        }
+        ShowRandomFinalIcon();
 
-        completed = true;   // Èç¹ûÖ»Ïë´¥·¢Ò»´Î
+        completed = true;   // åªæƒ³è§¦å‘ä¸€æ¬¡
         isCounting = false;
     }
 
@@ -122,10 +139,37 @@ public class CustomerWaitArea : MonoBehaviour
             loadingCircle.gameObject.SetActive(false);
         }
 
-        if (!completed && finalIcon != null)
+        if (!completed)
         {
-            finalIcon.gameObject.SetActive(false);
+            HideAllFinalIcons();
+        }
+    }
+
+    private void HideAllFinalIcons()
+    {
+        if (finalIcons == null) return;
+
+        foreach (var icon in finalIcons)
+        {
+            if (icon != null)
+            {
+                icon.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void ShowRandomFinalIcon()
+    {
+        if (finalIcons == null || finalIcons.Length == 0) return;
+
+        HideAllFinalIcons();
+
+        int index = Random.Range(0, finalIcons.Length);
+        var chosen = finalIcons[index];
+
+        if (chosen != null)
+        {
+            chosen.gameObject.SetActive(true);
         }
     }
 }
-

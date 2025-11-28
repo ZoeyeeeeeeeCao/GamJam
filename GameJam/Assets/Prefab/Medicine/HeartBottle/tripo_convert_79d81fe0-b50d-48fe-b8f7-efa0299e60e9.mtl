@@ -1,0 +1,16 @@
+# Blender 4.5.0 MTL File: 'None'
+# www.blender.org
+
+newmtl tripo_mat_79d81fe0-b50d-48fe-b8f7-efa0299e60e9
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd potionbottle3dmodel_basecolor.JPEG
+map_Ns potionbottle3dmodel_roughness.JPEG
+map_Pr potionbottle3dmodel_roughness.JPEG
+map_refl potionbottle3dmodel_metallic.JPEG
+map_Pm potionbottle3dmodel_metallic.JPEG
+map_Bump -bm 1.000000 potionbottle3dmodel_normal.JPEG
