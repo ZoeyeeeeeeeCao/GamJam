@@ -54,7 +54,7 @@ public class TopDownPlayerController : MonoBehaviour
             camForward.Normalize();
             camRight.Normalize();
 
-            // 把输入转换到世界空间：纵向用前后，横向用左右
+            // 把输入转换到世界空间海纵向用前后，横向用左右
             Vector3 moveDir = camForward * rawInput.z + camRight * rawInput.x;
 
             // 防止斜着跑更快，归一化
