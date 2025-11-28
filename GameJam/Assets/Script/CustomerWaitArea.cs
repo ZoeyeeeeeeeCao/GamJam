@@ -1,59 +1,44 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CustomerWaitArea : MonoBehaviour
 {
-    [Header("引用")]
-    public Transform customer;
-    public Image loadingCircle;
-    public Image[] finalIcons;
-
     [Header("设置")]
     public float waitTime = 10f;
     public string playerTag = "Player";
     public string customerTag = "Customer";
 
     private bool playerInside = false;
-    private bool customerInside = false; // ⭐ costumer 是否在区域内
+    private bool customerInside = false;
     private bool isCounting = false;
-    private bool completed = false;
     private Coroutine waitCoroutine;
 
-    private void Start()
-    {
-        if (loadingCircle != null)
-        {
-            loadingCircle.fillAmount = 0f;
-            loadingCircle.gameObject.SetActive(false);
-        }
+    private CustomerOrderUI currentCustomerUI;
 
-        HideAllFinalIcons();
-    }
+    // ⭐ 提供给桌子使用：当前这张桌子前的顾客 UI
+    public CustomerOrderUI CurrentCustomerUI => currentCustomerUI;
 
     private void OnTriggerEnter(Collider other)
     {
-        // 玩家进入
-        if (other.CompareTag(playerTag) && !completed)
+        // 玩家进入桌前区域
+        if (other.CompareTag(playerTag))
         {
             playerInside = true;
-
-            // 只有当 customer 也在场时才开始计时
-            if (customerInside && !isCounting)
-            {
-                waitCoroutine = StartCoroutine(WaitAndShowIcon());
-            }
+            TryStartCountdown();
         }
-        // Customer 进入
-        else if (other.CompareTag(customerTag) && !completed)
+        // 顾客进入桌前区域
+        else if (other.CompareTag(customerTag))
         {
             customerInside = true;
 
-            // 如果玩家已经在圈里，也可以马上开始计时
-            if (playerInside && !isCounting)
+            currentCustomerUI = other.GetComponentInChildren<CustomerOrderUI>();
+
+            if (currentCustomerUI != null && !currentCustomerUI.completed)
             {
-                waitCoroutine = StartCoroutine(WaitAndShowIcon());
+                currentCustomerUI.PrepareForWait();
             }
+
+            TryStartCountdown();
         }
     }
 
@@ -63,113 +48,73 @@ public class CustomerWaitArea : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             playerInside = false;
-            StopCountingIfNeeded();
+            StopCountdownIfRunning();
         }
-        // Customer 离开
+        // 顾客离开
         else if (other.CompareTag(customerTag))
         {
             customerInside = false;
-            StopCountingIfNeeded();
+            StopCountdownIfRunning();
+            currentCustomerUI = null;
         }
     }
 
-    private void StopCountingIfNeeded()
+    private void TryStartCountdown()
     {
-        // 只要还没完成，就打断计时并重置 UI
-        if (waitCoroutine != null && !completed)
+        if (playerInside &&
+            customerInside &&
+            currentCustomerUI != null &&
+            !currentCustomerUI.completed &&
+            !isCounting)
+        {
+            waitCoroutine = StartCoroutine(WaitAndShowIcon());
+        }
+    }
+
+    private void StopCountdownIfRunning()
+    {
+        if (waitCoroutine != null)
         {
             StopCoroutine(waitCoroutine);
             waitCoroutine = null;
-            isCounting = false;
-            ResetUI();
         }
+
+        if (currentCustomerUI != null && !currentCustomerUI.completed)
+        {
+            currentCustomerUI.PrepareForWait();
+        }
+
+        isCounting = false;
     }
 
     private IEnumerator WaitAndShowIcon()
     {
         isCounting = true;
 
-        if (loadingCircle != null)
-        {
-            loadingCircle.gameObject.SetActive(true);
-            loadingCircle.fillAmount = 0f;
-        }
-
-        HideAllFinalIcons();
-
         float timer = 0f;
 
         while (timer < waitTime)
         {
-            // 中途只要 player 或 customer 有一方不在，直接退出
-            if (!playerInside || !customerInside)
+            if (!playerInside || !customerInside || currentCustomerUI == null)
             {
                 isCounting = false;
                 yield break;
             }
 
             timer += Time.deltaTime;
-            float progress = Mathf.Clamp01(timer / waitTime);
+            float progress = timer / waitTime;
 
-            if (loadingCircle != null)
-            {
-                loadingCircle.fillAmount = progress;
-            }
+            currentCustomerUI.SetProgress(progress);
 
             yield return null;
         }
 
-        // 计时结束
-        if (loadingCircle != null)
+        if (currentCustomerUI != null)
         {
-            loadingCircle.gameObject.SetActive(false);
+            currentCustomerUI.EndProgress();
+            currentCustomerUI.ShowRandomOrderIcon();
         }
 
-        ShowRandomFinalIcon();
-
-        completed = true;   // 只想触发一次
         isCounting = false;
-    }
-
-    private void ResetUI()
-    {
-        if (loadingCircle != null)
-        {
-            loadingCircle.fillAmount = 0f;
-            loadingCircle.gameObject.SetActive(false);
-        }
-
-        if (!completed)
-        {
-            HideAllFinalIcons();
-        }
-    }
-
-    private void HideAllFinalIcons()
-    {
-        if (finalIcons == null) return;
-
-        foreach (var icon in finalIcons)
-        {
-            if (icon != null)
-            {
-                icon.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    private void ShowRandomFinalIcon()
-    {
-        if (finalIcons == null || finalIcons.Length == 0) return;
-
-        HideAllFinalIcons();
-
-        int index = Random.Range(0, finalIcons.Length);
-        var chosen = finalIcons[index];
-
-        if (chosen != null)
-        {
-            chosen.gameObject.SetActive(true);
-        }
     }
 }

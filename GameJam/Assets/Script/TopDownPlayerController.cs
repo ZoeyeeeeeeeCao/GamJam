@@ -28,11 +28,16 @@ public class TopDownPlayerController : MonoBehaviour
 
     private void Update()
     {
+        HandleMovementInput();
+        HandleMouseRotation();
+    }
+
+    private void HandleMovementInput()
+    {
         // 获取输入（WSAD / 方向键）
         float horizontal = Input.GetAxisRaw("Horizontal"); // A/D, 左/右
         float vertical = Input.GetAxisRaw("Vertical");     // W/S, 上/下
 
-        // 把输入先存起来，在 FixedUpdate 里用
         Vector3 rawInput = new Vector3(horizontal, 0f, vertical);
 
         // 没有输入就直接清零
@@ -68,16 +73,34 @@ public class TopDownPlayerController : MonoBehaviour
             // 没设置相机就直接按世界坐标走（Z 前 X 右）
             inputDirection = rawInput.normalized;
         }
+    }
 
-        // 让角色面对移动方向（可选）
-        if (inputDirection.sqrMagnitude > 0.001f)
+    /// <summary>
+    /// 用鼠标控制玩家朝向（沿 Y 轴）
+    /// </summary>
+    private void HandleMouseRotation()
+    {
+        Camera cam = Camera.main;
+        if (cam == null) cam = cameraTransform != null ? cameraTransform.GetComponent<Camera>() : null;
+        if (cam == null) return;
+
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        // 在玩家当前高度的平面上求交点
+        Plane plane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+
+        if (plane.Raycast(ray, out float enter))
         {
-            Quaternion targetRot = Quaternion.LookRotation(inputDirection, Vector3.up);
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                targetRot,
-                10f * Time.deltaTime
-            );
+            Vector3 hitPoint = ray.GetPoint(enter);
+            Vector3 lookDir = hitPoint - transform.position;
+            lookDir.y = 0f; // 只在水平面旋转
+
+            if (lookDir.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+                // 用刚体旋转会更稳定一点：
+                rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, 10f * Time.deltaTime));
+            }
         }
     }
 
@@ -91,3 +114,4 @@ public class TopDownPlayerController : MonoBehaviour
         }
     }
 }
+
