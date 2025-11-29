@@ -13,18 +13,18 @@ public class WindowCounter : MonoBehaviour
 
     private List<GameObject> currentFoods = new List<GameObject>();
 
-    public bool IsFull()
+    /*public bool IsFull()
     {
         return currentFoods.Count >= foodSlots.Length;
-    }
+    }*/
 
     public void SpawnFinishedFood(FoodType type)
     {
-        if (IsFull())
+        /*if (IsFull())
         {
             Debug.LogWarning("WindowCounter is full! Can't spawn more food.");
             return;
-        }
+        }*/
 
         GameObject prefabToSpawn = GetPrefab(type);
         if (prefabToSpawn == null)
