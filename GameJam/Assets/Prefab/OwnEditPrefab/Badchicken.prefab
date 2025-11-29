@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5859440352156161166}
   - component: {fileID: 4362077303611501257}
   - component: {fileID: 6968228488217356656}
+  - component: {fileID: -8984205413062988605}
   m_Layer: 7
   m_Name: Badchicken
   m_TagString: FoodTrigger
@@ -158,3 +159,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.2920156, y: 0.83, z: 0.83000004}
   m_Center: {x: -0.6502547, y: 0.00036850572, z: 0.0003437996}
+--- !u!114 &-8984205413062988605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2763943991164812565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b184b5ecb325b247889d22520e1b045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodPrefabId: {fileID: 2763943991164812565}
+  correctResultPrefab: {fileID: 0}
+  poisonResultPrefab: {fileID: 0}
+  correctOrder: []

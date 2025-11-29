@@ -118,18 +118,22 @@ public class CustomerOrderUI : MonoBehaviour
 
         var currentOrder = orders[currentOrderIndex];
 
+        Debug.Log($"顾客当前想要：{currentOrder.orderName} / 正确={currentOrder.reaction1FoodPrefab?.name} 下毒={currentOrder.reaction2FoodPrefab?.name}，你给的是={servedFoodPrefab.name}");
+
         if (servedFoodPrefab == currentOrder.reaction1FoodPrefab)
         {
-            return CustomerReactionType.Reaction1; // 正确食物→开心
+            Debug.Log("匹配到 Reaction1！（正确菜）");
+            return CustomerReactionType.Reaction1;
         }
 
         if (servedFoodPrefab == currentOrder.reaction2FoodPrefab)
         {
-            return CustomerReactionType.Reaction2; // 下毒版→倒地
+            Debug.Log("匹配到 Reaction2！（下毒菜）");
+            return CustomerReactionType.Reaction2;
         }
 
-        // 其余所有食物 → 反应3
-        return CustomerReactionType.Reaction3;     // 生气
+        Debug.Log("都匹配不上 → Reaction3（食物错误）");
+        return CustomerReactionType.Reaction3;
     }
 
     public void ResetForNextTime()

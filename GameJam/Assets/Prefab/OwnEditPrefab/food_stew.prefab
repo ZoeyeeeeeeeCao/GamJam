@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5167606064128081066}
   - component: {fileID: 6054886765192173096}
   - component: {fileID: 7574976933812612952}
+  - component: {fileID: -243927161205205815}
   m_Layer: 7
   m_Name: food_stew
   m_TagString: FoodTrigger
@@ -158,3 +159,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.95000005, y: 0.36969027, z: 0.95000005}
   m_Center: {x: -0.00000013411045, y: 0.18484516, z: 0.000000014901161}
+--- !u!114 &-243927161205205815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4164132378825355920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b184b5ecb325b247889d22520e1b045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodPrefabId: {fileID: 4164132378825355920}
+  correctResultPrefab: {fileID: 0}
+  poisonResultPrefab: {fileID: 0}
+  correctOrder: []

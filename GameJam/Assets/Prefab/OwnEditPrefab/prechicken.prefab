@@ -124,8 +124,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   foodPrefabId: {fileID: 1029611227244978585}
-  correctResultPrefab: {fileID: 0}
-  poisonResultPrefab: {fileID: 0}
+  correctResultPrefab: {fileID: 4297689943791715542, guid: 09d564489e72c0d439cd88b575cc9c4e, type: 3}
+  poisonResultPrefab: {fileID: 2763943991164812565, guid: 5f07b4e6160153e459814a2e1afcfb40, type: 3}
   correctOrder:
   - A
   - B
