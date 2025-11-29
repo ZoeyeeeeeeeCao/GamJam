@@ -25,6 +25,12 @@ public class PlayerCarryFood : MonoBehaviour
     private TableServeArea tableInRange; // 脚下可放置的桌子
     public bool IsCarryingFood => heldFood != null;
 
+    [Header("物品音效")]
+    public AudioSource audioSource;
+    public AudioClip pickupClip;
+    public AudioClip placeClip;
+    public AudioClip dropClip;
+
     // ⭐ 玩家自身所有 Collider（包括子物体）
     private Collider[] playerColliders;
     // ⭐ 当前拿在手上的这一份食物的 Collider
@@ -96,6 +102,12 @@ public class PlayerCarryFood : MonoBehaviour
         }
 
         Debug.Log("拿起食物：" + heldFood.name);
+        if (pickupClip != null)
+        {
+            audioSource.PlayOneShot(pickupClip);
+        }
+            
+
     }
 
     // =============================
@@ -117,6 +129,7 @@ public class PlayerCarryFood : MonoBehaviour
             heldFood = null;
             heldFoodColliders = null;
             Debug.Log("把食物放到下毒桌。");
+            audioSource.PlayOneShot(placeClip);
             return;
         }
 
@@ -138,6 +151,7 @@ public class PlayerCarryFood : MonoBehaviour
             heldFoodColliders = null;
 
             Debug.Log("把食物放到普通桌子上。");
+            audioSource.PlayOneShot(placeClip);
             return;
         }
 
@@ -183,8 +197,12 @@ public class PlayerCarryFood : MonoBehaviour
         }
 
         Debug.Log("把食物扔在地上：" + heldFood.name);
+        if (dropClip != null)
+        {
+            audioSource.PlayOneShot(dropClip);
+        }
 
-        heldFood = null;
+            heldFood = null;
         heldFoodColliders = null;
     }
 

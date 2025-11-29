@@ -17,6 +17,12 @@ public class TopDownPlayerController : MonoBehaviour
 
     private PlayerCarryFood carryFood; // NEW
 
+    [Header("音效")]
+    public AudioSource audioSource;   // 用来播放脚步声的 AudioSource（Loop ON）
+    public AudioClip footstepClip;    // 脚步声循环音效
+
+    private bool wasMoving = false;   // 上一帧是否在移动
+
 
     private void Awake()
     {
@@ -40,6 +46,13 @@ public class TopDownPlayerController : MonoBehaviour
 
         carryFood = GetComponent<PlayerCarryFood>();
 
+        // ⭐ 初始化脚步声 AudioSource
+        if (audioSource != null && footstepClip != null)
+        {
+            audioSource.clip = footstepClip;
+            audioSource.loop = true;         // 循环播放
+            audioSource.playOnAwake = false; // 不要一开始就自己播
+        }
     }
 
     private void Update()
@@ -47,13 +60,14 @@ public class TopDownPlayerController : MonoBehaviour
         HandleMovementInput();
         HandleMouseRotation();
         UpdateAnimation(); // NEW: 根据输入更新动画
+        HandleFootstepSound(); // NEW: 根据是否在移动控制脚步声 Play/Stop
     }
 
     private void HandleMovementInput()
     {
         // 获取输入（WSAD / 方向键）
         float horizontal = Input.GetAxisRaw("Horizontal"); // A/D, 左/右
-        float vertical = Input.GetAxisRaw("Vertical");     // W/S, 前/后
+        float vertical = Input.GetAxisRaw("Vertical");   // W/S, 前/后
 
         Vector3 rawInput = new Vector3(horizontal, 0f, vertical);
 
@@ -98,7 +112,8 @@ public class TopDownPlayerController : MonoBehaviour
     private void HandleMouseRotation()
     {
         Camera cam = Camera.main;
-        if (cam == null) cam = cameraTransform != null ? cameraTransform.GetComponent<Camera>() : null;
+        if (cam == null && cameraTransform != null)
+            cam = cameraTransform.GetComponent<Camera>();
         if (cam == null) return;
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -143,4 +158,31 @@ public class TopDownPlayerController : MonoBehaviour
         animator.SetBool("IsCarrying", isCarrying);
     }
 
+    // NEW: 专门控制脚步声 Play / Stop
+    private void HandleFootstepSound()
+    {
+        if (audioSource == null || footstepClip == null)
+            return;
+
+        bool isMoving = inputDirection.sqrMagnitude > 0.001f;
+
+        if (isMoving && !wasMoving)
+        {
+            // 刚开始移动 → 播放脚步循环
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else if (!isMoving && wasMoving)
+        {
+            // 刚刚停止移动 → 立刻掐断脚步声
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+        }
+
+        wasMoving = isMoving;
+    }
 }
