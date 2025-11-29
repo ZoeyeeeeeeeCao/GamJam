@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1297351704200468631}
   - component: {fileID: 1650200395215313839}
   - component: {fileID: 867297934328339688}
+  - component: {fileID: -2827505923200311395}
   m_Layer: 7
   m_Name: BadBurger
   m_TagString: FoodTrigger
@@ -158,3 +159,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.95000005, y: 0.85719955, z: 0.95}
   m_Center: {x: -0.000000014901161, y: 0.42859977, z: 0}
+--- !u!114 &-2827505923200311395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8807856545660285026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b184b5ecb325b247889d22520e1b045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodPrefabId: {fileID: 8807856545660285026}
+  correctResultPrefab: {fileID: 0}
+  poisonResultPrefab: {fileID: 0}
+  correctOrder: []

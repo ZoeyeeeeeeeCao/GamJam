@@ -1,15 +1,15 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PotionTable : MonoBehaviour
 {
-    [Header("Ê³ÎïÔÚ×À×ÓÉÏµÄ°Ú·Åµã")]
-    public Transform workPoint;  // °ÑÊ³Îï·ÅÔÚÄÄ¸öÎ»ÖÃ
+    [Header("é£Ÿç‰©åœ¨æ¡Œå­ä¸Šçš„æ‘†æ”¾ç‚¹")]
+    public Transform workPoint;  // æŠŠé£Ÿç‰©æ”¾åœ¨å“ªä¸ªä½ç½®
 
     [HideInInspector]
-    public FoodItem currentFood; // µ±Ç°ÔÚ×À×ÓÉÏµÄÄÇ·İÊ³Îï
+    public FoodItem currentFood; // å½“å‰åœ¨æ¡Œå­ä¸Šçš„é‚£ä»½é£Ÿç‰©
 
     /// <summary>
-    /// Íæ¼Ò°ÑÊ³Îï·Åµ½Õâ¸ö×À×ÓÉÏÊ±µ÷ÓÃ
+    /// ç©å®¶æŠŠé£Ÿç‰©æ”¾åˆ°è¿™ä¸ªæ¡Œå­ä¸Šæ—¶è°ƒç”¨
     /// </summary>
     public void PlaceFood(FoodItem food)
     {
@@ -17,17 +17,17 @@ public class PotionTable : MonoBehaviour
 
         currentFood = food;
 
-        // ½â³ı¸¸×Ó¹ØÏµ£¨²»ÔÙ¹ÒÔÚÍæ¼ÒÊÖÉÏ£©
+        // è§£é™¤çˆ¶å­å…³ç³»ï¼ˆä¸å†æŒ‚åœ¨ç©å®¶æ‰‹ä¸Šï¼‰
         food.transform.SetParent(null);
 
-        // °ÑÊ³ÎïÒÆµ½¹¤×÷Ì¨ÖĞĞÄ
+        // æŠŠé£Ÿç‰©ç§»åˆ°å·¥ä½œå°ä¸­å¿ƒ
         if (workPoint != null)
         {
             food.transform.position = workPoint.position;
             food.transform.rotation = workPoint.rotation;
         }
 
-        // »Ö¸´ÎïÀí£¨·ÅÔÚ×À×ÓÉÏÓ¦¸ÃÊÜÖØÁ¦£©
+        // æ¢å¤ç‰©ç†ï¼ˆæ”¾åœ¨æ¡Œå­ä¸Šåº”è¯¥å—é‡åŠ›ï¼‰
         var rb = food.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -35,14 +35,14 @@ public class PotionTable : MonoBehaviour
             rb.useGravity = true;
         }
 
-        Debug.Log("°ÑÊ³Îï·Åµ½µ÷ÖÆ×À£º" + food.name);
+        Debug.Log("æŠŠé£Ÿç‰©æ”¾åˆ°è°ƒåˆ¶æ¡Œï¼š" + food.name);
 
-        // ´ò¿ª UI Ãæ°å£¬ÈÃÍæ¼Òµã ABC
+        // æ‰“å¼€ UI é¢æ¿ï¼Œè®©ç©å®¶ç‚¹ ABC
         PotionUI.Instance.OpenPanel(this);
     }
 
     /// <summary>
-    /// µ±Íæ¼ÒÍê³É ABC µãÑ¡ºó£¬ÓÉ UI »Øµ÷£¬success ±íÊ¾Ë³ĞòÊÇ·ñÕıÈ·
+    /// å½“ç©å®¶å®Œæˆ ABC ç‚¹é€‰åï¼Œç”± UI å›è°ƒï¼Œsuccess è¡¨ç¤ºé¡ºåºæ˜¯å¦æ­£ç¡®
     /// </summary>
     public void ApplyResult(bool success)
     {
@@ -53,22 +53,22 @@ public class PotionTable : MonoBehaviour
 
         if (success)
         {
-            Debug.Log("Åä·½³É¹¦£¡±ä³ÉÕıÈ·°æ±¾Ê³Îï¡£");
-            resultPrefab = currentFood.correctResultPrefab;
+            Debug.Log("é…æ–¹æˆåŠŸï¼å˜æˆæ­£ç¡®ç‰ˆæœ¬é£Ÿç‰©ã€‚");
+            resultPrefab = currentFood.correctResultPrefab;   // ä¾‹å¦‚ food_stewï¼ˆèµ„äº§ï¼‰
         }
         else
         {
-            Debug.Log("Åä·½Ê§°Ü£¬±ä³ÉÏÂ¶¾Ê³Îï£¡");
-            resultPrefab = currentFood.poisonResultPrefab;
+            Debug.Log("é…æ–¹å¤±è´¥ï¼Œå˜æˆä¸‹æ¯’é£Ÿç‰©ï¼");
+            resultPrefab = currentFood.poisonResultPrefab;    // ä¾‹å¦‚ BadSoupï¼ˆèµ„äº§ï¼‰
         }
 
         if (resultPrefab == null)
         {
-            Debug.LogWarning("½á¹û prefab Ã»ÓĞÉèÖÃ£¬¼ì²é FoodItem ÉÏµÄ correctResultPrefab / poisonResultPrefab");
+            Debug.LogWarning("ç»“æœ prefab æ²¡æœ‰è®¾ç½®ï¼Œæ£€æŸ¥ FoodItem ä¸Šçš„ correctResultPrefab / poisonResultPrefab");
             return;
         }
 
-        // Ìæ»»³ÉĞÂÊ³Îï
+        // æ›¿æ¢æˆæ–°é£Ÿç‰©ï¼Œå¹¶ä¸”æ‰‹åŠ¨æŠŠ foodPrefabId è®¾æˆâ€œèµ„äº§ prefabâ€
         FoodItem newFood = ReplaceFood(currentFood, resultPrefab);
         currentFood = newFood;
     }
@@ -78,9 +78,24 @@ public class PotionTable : MonoBehaviour
         Vector3 pos = oldFood.transform.position;
         Quaternion rot = oldFood.transform.rotation;
 
-        GameObject newObj = Instantiate(prefab, pos, rot);
-        Destroy(oldFood.gameObject);
+        // å®ä¾‹åŒ–æˆå“ï¼ˆåœºæ™¯é‡Œçš„ Cloneï¼‰
+        GameObject newObj = Object.Instantiate(prefab, pos, rot);
 
-        return newObj.GetComponent<FoodItem>();
+        // æ‹¿åˆ°/æˆ–æ·»åŠ  FoodItem ç»„ä»¶
+        FoodItem newItem = newObj.GetComponent<FoodItem>();
+        if (newItem == null)
+        {
+            newItem = newObj.AddComponent<FoodItem>();
+        }
+
+        // â­â­ å…³é”®ï¼šå¼ºåˆ¶æŠŠ foodPrefabId è®¾æˆâ€œèµ„äº§ prefabâ€ï¼Œè€Œä¸æ˜¯ Clone è‡ªå·±
+        newItem.foodPrefabId = prefab;
+
+        // ï¼ˆå¦‚æœä½ ä¸å¸Œæœ›æˆå“å†å»æ¯’æ¡ŒåŠ å·¥ï¼Œå¯ä»¥ä¸å†ç»™å®ƒ correctResultPrefab / poisonResultPrefab / correctOrderï¼‰
+
+        // åˆ æ‰æ—§çš„åŠæˆå“
+        Object.Destroy(oldFood.gameObject);
+
+        return newItem;
     }
 }
