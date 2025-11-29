@@ -8,6 +8,7 @@ public class CustomerAI : MonoBehaviour
     private Animator animator;
     private Seat seat;
 
+
     private bool isSitting = false;
 
     public Transform exitPoint; //spawnpoint, which is the restaurant exit!!
@@ -189,8 +190,8 @@ public class CustomerAI : MonoBehaviour
         // Fully exit sitting state
         isSitting = false;
 
-        // Prevent SitInstantly() from ever being called again
-        seat = null;
+        // ❌ REMOVE THIS (causes seat not to be freed)
+        // seat = null;
 
         // Ensure we don't auto-walk
         if (agent != null)
@@ -206,6 +207,7 @@ public class CustomerAI : MonoBehaviour
             animator.SetBool("IsMoving", false);
         }
     }
+
 
 
 }
