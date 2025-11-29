@@ -1332,7 +1332,7 @@ GameObject:
   - component: {fileID: 1304965509}
   - component: {fileID: 1304965508}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: WindowCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
