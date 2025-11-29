@@ -1,22 +1,28 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class TopDownPlayerController : MonoBehaviour
 {
-    [Header("ÒÆ¶¯²ÎÊı")]
-    public float moveSpeed = 5f;          // ÒÆ¶¯ËÙ¶È
+    [Header("ç§»åŠ¨å‚æ•°")]
+    public float moveSpeed = 5f;          // ç§»åŠ¨é€Ÿåº¦
 
-    [Header("Ïà»ú")]
-    public Transform cameraTransform;     // ÓÃÀ´È·¶¨ÆÁÄ»·½Ïò£¨Ò»°ãÍÏ Main Camera£©
+    [Header("ç›¸æœº")]
+    public Transform cameraTransform;     // ç”¨æ¥ç¡®å®šå±å¹•æ–¹å‘ï¼ˆä¸€èˆ¬æ‹– Main Cameraï¼‰
 
     private Rigidbody rb;
     private Vector3 inputDirection;
+
+    // NEW: Animator å¼•ç”¨
+    private Animator animator;
+
+    private PlayerCarryFood carryFood; // NEW
+
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
-        // ²»Ï£Íû¸ÕÌå×Ô¼ºÂÒĞı×ª
+        // ä¸å¸Œæœ›åˆšä½“è‡ªå·±ä¹±æ—‹è½¬
         rb.constraints = RigidbodyConstraints.FreezeRotationX
                        | RigidbodyConstraints.FreezeRotationZ;
 
@@ -24,45 +30,56 @@ public class TopDownPlayerController : MonoBehaviour
         {
             cameraTransform = Camera.main.transform;
         }
+
+        // åœ¨å­ç‰©ä½“ä¸­æ‰¾åˆ° Animatorï¼ˆæ¨¡å‹ä¸€èˆ¬åœ¨å­ç‰©ä½“ä¸Šï¼‰
+        animator = GetComponentInChildren<Animator>();
+        if (animator == null)
+        {
+            Debug.LogWarning("TopDownPlayerController: No Animator found in children.");
+        }
+
+        carryFood = GetComponent<PlayerCarryFood>();
+
     }
 
     private void Update()
     {
         HandleMovementInput();
         HandleMouseRotation();
+        UpdateAnimation(); // NEW: æ ¹æ®è¾“å…¥æ›´æ–°åŠ¨ç”»
     }
 
     private void HandleMovementInput()
     {
-        // »ñÈ¡ÊäÈë£¨WSAD / ·½Ïò¼ü£©
-        float horizontal = Input.GetAxisRaw("Horizontal"); // A/D, ×ó/ÓÒ
-        float vertical = Input.GetAxisRaw("Vertical");     // W/S, ÉÏ/ÏÂ
+        // è·å–è¾“å…¥ï¼ˆWSAD / æ–¹å‘é”®ï¼‰
+        float horizontal = Input.GetAxisRaw("Horizontal"); // A/D, å·¦/å³
+        float vertical = Input.GetAxisRaw("Vertical");     // W/S, å‰/å
 
         Vector3 rawInput = new Vector3(horizontal, 0f, vertical);
 
-        // Ã»ÓĞÊäÈë¾ÍÖ±½ÓÇåÁã
+        // æ²¡æœ‰è¾“å…¥å°±ç›´æ¥æ¸…é›¶
         if (rawInput.sqrMagnitude < 0.001f)
         {
             inputDirection = Vector3.zero;
             return;
         }
 
-        // ¸ù¾İÏà»ú·½ÏòÀ´ËãÒÆ¶¯·½Ïò£¨±£Ö¤ºÍÆÁÄ»·½ÏòÒ»ÖÂ£©
+        // æ ¹æ®ç›¸æœºæ–¹å‘æ¥ç®—ç§»åŠ¨æ–¹å‘ï¼ˆä¿è¯å’Œå±å¹•æ–¹å‘ä¸€è‡´ï¼‰
         if (cameraTransform != null)
         {
             Vector3 camForward = cameraTransform.forward;
             Vector3 camRight = cameraTransform.right;
 
-            // Ö»ÒªË®Æ½·ÖÁ¿£¨y=0£©£¬±ÜÃâÉÏÏÂÇãĞ±Ó°Ïì
+            // åªè¦æ°´å¹³åˆ†é‡ï¼Œy = 0ï¼Œé¿å…ä¸Šä¸‹å€¾æ–œå½±å“
             camForward.y = 0f;
             camRight.y = 0f;
             camForward.Normalize();
             camRight.Normalize();
 
-            // °ÑÊäÈë×ª»»µ½ÊÀ½ç¿Õ¼äº£×İÏòÓÃÇ°ºó£¬ºáÏòÓÃ×óÓÒ
+            // æŠŠè¾“å…¥è½¬æ¢åˆ°ä¸–ç•Œç©ºé—´ï¼šå‰åç”¨ camForwardï¼Œå·¦å³ç”¨ camRight
             Vector3 moveDir = camForward * rawInput.z + camRight * rawInput.x;
 
-            // ·ÀÖ¹Ğ±×ÅÅÜ¸ü¿ì£¬¹éÒ»»¯
+            // é˜²æ­¢æ–œç€èµ°æ›´å¿«ï¼Œå½’ä¸€åŒ–
             if (moveDir.magnitude > 1f)
                 moveDir.Normalize();
 
@@ -70,13 +87,13 @@ public class TopDownPlayerController : MonoBehaviour
         }
         else
         {
-            // Ã»ÉèÖÃÏà»ú¾ÍÖ±½Ó°´ÊÀ½ç×ø±ê×ß£¨Z Ç° X ÓÒ£©
+            // æ²¡æœ‰è®¾ç½®ç›¸æœºå°±æŒ‰ä¸–ç•Œåæ ‡èµ°ï¼ˆZ å‰ X å³ï¼‰
             inputDirection = rawInput.normalized;
         }
     }
 
     /// <summary>
-    /// ÓÃÊó±ê¿ØÖÆÍæ¼Ò³¯Ïò£¨ÑØ Y Öá£©
+    /// ç”¨é¼ æ ‡æ§åˆ¶ç©å®¶æœå‘ï¼Œç»• Y è½´
     /// </summary>
     private void HandleMouseRotation()
     {
@@ -86,19 +103,19 @@ public class TopDownPlayerController : MonoBehaviour
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        // ÔÚÍæ¼Òµ±Ç°¸ß¶ÈµÄÆ½ÃæÉÏÇó½»µã
+        // åœ¨ç©å®¶å½“å‰é«˜åº¦çš„å¹³é¢ä¸Šæ±‚äº¤ç‚¹
         Plane plane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
 
         if (plane.Raycast(ray, out float enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
             Vector3 lookDir = hitPoint - transform.position;
-            lookDir.y = 0f; // Ö»ÔÚË®Æ½ÃæĞı×ª
+            lookDir.y = 0f; // åªåœ¨æ°´å¹³é¢æ—‹è½¬
 
             if (lookDir.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
-                // ÓÃ¸ÕÌåĞı×ª»á¸üÎÈ¶¨Ò»µã£º
+                // ç”¨åˆšä½“æ—‹è½¬ä¼šæ›´ç¨³å®š
                 rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRot, 10f * Time.deltaTime));
             }
         }
@@ -106,12 +123,24 @@ public class TopDownPlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // ÎïÀí¸üĞÂÖĞÒÆ¶¯
+        // ç‰©ç†æ›´æ–°ä¸­ç§»åŠ¨
         if (inputDirection.sqrMagnitude > 0.001f)
         {
             Vector3 targetPosition = rb.position + inputDirection * moveSpeed * Time.fixedDeltaTime;
             rb.MovePosition(targetPosition);
         }
     }
-}
 
+    // NEW: æ ¹æ®æ˜¯å¦æœ‰ç§»åŠ¨è¾“å…¥ï¼Œåˆ‡æ¢ Idle/Walk åŠ¨ç”»
+    private void UpdateAnimation()
+    {
+        if (animator == null) return;
+
+        bool isMoving = inputDirection.sqrMagnitude > 0.001f;
+        animator.SetBool("IsMoving", isMoving);
+
+        bool isCarrying = carryFood != null && carryFood.IsCarryingFood;
+        animator.SetBool("IsCarrying", isCarrying);
+    }
+
+}

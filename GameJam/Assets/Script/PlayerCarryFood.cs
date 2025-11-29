@@ -19,6 +19,8 @@ public class PlayerCarryFood : MonoBehaviour
     private FoodItem heldFood;           // 目前拿着的食物
     private FoodItem foodInRange;        // 脚下可拾取食物
     private TableServeArea tableInRange; // 脚下可放置的桌子
+    public bool IsCarryingFood => heldFood != null;
+
 
     // ⭐ 玩家自身所有 Collider（包括子物体）
     private Collider[] playerColliders;
