@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 3818468534762833888}
   - component: {fileID: 6055538866189884293}
   - component: {fileID: 4111929281901274528}
-  - component: {fileID: 5014163397234922959}
   m_Layer: 7
   m_Name: preburger
   m_TagString: FoodTrigger
@@ -34,7 +33,8 @@ Transform:
   m_LocalPosition: {x: 0.46, y: 1.4060631, z: -9.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5443189804073726832}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!33 &7002889987528521630
@@ -109,8 +109,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.293539, y: 0.85719955, z: 0.95}
-  m_Center: {x: 0.6717696, y: 0.42859977, z: 8.4243144e-16}
+  m_Size: {x: 0.96543455, y: 0.85719955, z: 2.4642146}
+  m_Center: {x: 0.007717371, y: 0.42859977, z: 0.02575171}
 --- !u!114 &6055538866189884293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,13 +157,45 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &5014163397234922959
+--- !u!1 &8602165688344719112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5443189804073726832}
+  - component: {fileID: 523098793394375749}
+  m_Layer: 7
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5443189804073726832
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602165688344719112}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3639585237495312933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &523098793394375749
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1657750743411073911}
+  m_GameObject: {fileID: 8602165688344719112}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -176,5 +208,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2137089, y: 0.85719955, z: 0.95}
-  m_Center: {x: -0.6318544, y: 0.42859977, z: -1.8737656e-15}
+  m_Size: {x: 0.8493926, y: 0.8501893, z: 0.728259}
+  m_Center: {x: 0.0044295043, y: 0.42745012, z: 7.435904e-18}

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class WindowCounter : MonoBehaviour
@@ -38,8 +38,24 @@ public class WindowCounter : MonoBehaviour
         GameObject foodObj = Instantiate(prefabToSpawn, slot.position, slot.rotation);
         foodObj.transform.SetParent(slot);
 
+        // ⭐⭐⭐ 核心：保证 FoodItem.foodPrefabId 指向“资产 prefab”，不是 Clone
+        var item = foodObj.GetComponent<FoodItem>();
+        if (item == null)
+        {
+            item = foodObj.AddComponent<FoodItem>();   // 如果 prefab 上没挂，就现场补一个
+        }
+
+        // 用来给顾客判断的 ID → 一律写成我们这次生成用的 prefab 资产
+        item.foodPrefabId = prefabToSpawn;
+
+        // 如果这些成品不需要再去毒桌加工，可以把其它字段留空，让别的系统无视它
+        // item.correctResultPrefab = null;
+        // item.poisonResultPrefab  = null;
+        // item.correctOrder        = null;
+
         currentFoods.Add(foodObj);
     }
+
 
     private GameObject GetPrefab(FoodType type)
     {
