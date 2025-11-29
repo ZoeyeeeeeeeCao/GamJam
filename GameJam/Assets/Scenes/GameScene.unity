@@ -2010,7 +2010,7 @@ Transform:
   m_GameObject: {fileID: 447094692}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.34507236, y: 0.9267993, z: -0.033075035}
+  m_LocalPosition: {x: -0.22754137, y: 0.9267993, z: -0.033075035}
   m_LocalScale: {x: 0.15692508, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2634,9 +2634,9 @@ MonoBehaviour:
   foodSlots:
   - {fileID: 1733170050}
   - {fileID: 447094693}
-  soupPrefab: {fileID: 919132149155446097, guid: d02257f206115dc41b85349016f60541, type: 3}
-  chickenPrefab: {fileID: 919132149155446097, guid: 00445a39da3e2f24e9c2abc0d16e81d5, type: 3}
-  burgerPrefab: {fileID: 919132149155446097, guid: 2cba10888107c914b9446443a47d8c0b, type: 3}
+  soupPrefab: {fileID: 2775434590755975292, guid: eb20c8e826939c44dbcf2472f024c00b, type: 3}
+  chickenPrefab: {fileID: 1029611227244978585, guid: 2ce465e1135bf404fb306d44533f0d50, type: 3}
+  burgerPrefab: {fileID: 1657750743411073911, guid: b9a649c2843bb1a48bac32cc1f8edfbe, type: 3}
 --- !u!4 &516961755
 Transform:
   m_ObjectHideFlags: 0
@@ -8562,7 +8562,7 @@ Transform:
   m_GameObject: {fileID: 1733170049}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.047701057, y: 0.9267993, z: -0.033075035}
+  m_LocalPosition: {x: -0.0706163, y: 0.9267993, z: -0.033075035}
   m_LocalScale: {x: 0.15692508, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
