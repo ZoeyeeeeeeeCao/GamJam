@@ -10,6 +10,12 @@ public class PlayerCarryFood : MonoBehaviour
     public string foodTriggerTag = "FoodTrigger";   // 食物交互区的Tag
     public string tableTriggerTag = "TableTrigger"; // 桌子交互区的Tag
 
+    [Header("下毒桌设置")]
+    public string potionTableTag = "PotionTable"; // 下毒桌触发区的 Tag
+
+    private PotionTable potionInRange;  // 当前范围内的下毒桌
+
+
     private FoodItem heldFood;           // 目前拿着的食物
     private FoodItem foodInRange;        // 脚下可拾取食物
     private TableServeArea tableInRange; // 脚下可放置的桌子
@@ -86,9 +92,9 @@ public class PlayerCarryFood : MonoBehaviour
     // =============================
     private void TryPlaceFoodOnTable()
     {
-        if (heldFood == null || tableInRange == null) return;
+        if (heldFood == null) return;
 
-        // 先恢复玩家与这份食物的碰撞
+        // ① 先恢复玩家与这份食物的碰撞（不管最终放哪）
         if (playerColliders != null && heldFoodColliders != null)
         {
             foreach (var pc in playerColliders)
@@ -104,23 +110,43 @@ public class PlayerCarryFood : MonoBehaviour
             }
         }
 
-        // 把食物交给桌子处理（摆到桌面中心 + 判定顾客反应）
-        tableInRange.PlaceFood(heldFood);
-
-        // 恢复刚体物理
-        Rigidbody rb = heldFood.GetComponent<Rigidbody>();
-        if (rb != null)
+        // ② 如果有下毒桌在范围内，优先放到下毒桌
+        if (potionInRange != null)
         {
-            rb.isKinematic = false;
-            rb.useGravity = true;
+            potionInRange.PlaceFood(heldFood);
+
+            // 这份食物现在在下毒桌上了，不在玩家手里
+            heldFood = null;
+            heldFoodColliders = null;
+            Debug.Log("把食物放到下毒桌。");
+            return;
         }
 
-        heldFood.transform.SetParent(null);
-        heldFood = null;
-        heldFoodColliders = null;
+        // ③ 否则，如果有普通桌子，则按原来的逻辑放到普通桌
+        if (tableInRange != null)
+        {
+            tableInRange.PlaceFood(heldFood);
 
-        Debug.Log("放下食物");
+            // 恢复刚体物理
+            Rigidbody rb = heldFood.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            }
+
+            heldFood.transform.SetParent(null);
+            heldFood = null;
+            heldFoodColliders = null;
+
+            Debug.Log("把食物放到普通桌子上。");
+            return;
+        }
+
+        // ④ 如果两种桌子都不在范围内，你可以选择把食物丢在地上（可选）
+        Debug.Log("附近没有桌子，暂时不放食物。");
     }
+
 
     // =============================
     // ③ 触发区检测
@@ -145,6 +171,15 @@ public class PlayerCarryFood : MonoBehaviour
                 Debug.Log("进入桌子交互区：" + table.name);
             }
         }
+        else if (other.CompareTag(potionTableTag))
+        {
+            var potionTable = other.GetComponentInParent<PotionTable>();
+            if (potionTable != null)
+            {
+                potionInRange = potionTable;
+                Debug.Log("进入下毒桌交互区：" + potionTable.name);
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -165,6 +200,15 @@ public class PlayerCarryFood : MonoBehaviour
             {
                 tableInRange = null;
                 Debug.Log("离开桌子交互区");
+            }
+        }
+        else if (other.CompareTag(potionTableTag))
+        {
+            var potionTable = other.GetComponentInParent<PotionTable>();
+            if (potionTable != null && potionTable == potionInRange)
+            {
+                potionInRange = null;
+                Debug.Log("离开下毒桌交互区");
             }
         }
     }
