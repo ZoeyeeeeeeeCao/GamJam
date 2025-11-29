@@ -2,38 +2,72 @@ using UnityEngine;
 
 public class OrderUIController : MonoBehaviour
 {
-    public GameObject orderPanel;
+    [Header("UI")]
+    public GameObject orderPanel;     // Panel with Soup/Chicken/Burger buttons
+
+    [Header("References")]
+    public ChefStation chefStation;   // Drag your ChefStation here in Inspector
+    public WindowCounter windowCounter;   // window counter so that u cannot make orders if the counter is full.
+
 
     private void Start()
     {
-        orderPanel.SetActive(false);
+        if (orderPanel != null)
+            orderPanel.SetActive(false);
     }
 
     public void OpenOrderUI()
     {
-        orderPanel.SetActive(true);
+        if (orderPanel != null)
+            orderPanel.SetActive(true);
     }
 
     public void CloseOrderUI()
     {
-        orderPanel.SetActive(false);
+        if (orderPanel != null)
+            orderPanel.SetActive(false);
     }
 
+    // These will be called by button OnClick in the Inspector
     public void OrderSoup()
     {
-        OrderManager.Instance.AddOrder("Soup");
+        if (windowCounter.IsFull())
+        {
+            Debug.Log("Pick up items from counter before you can make new orders!");
+            CloseOrderUI();
+            return;
+        }
+
+        chefStation.EnqueueOrder(FoodType.Soup);
         CloseOrderUI();
     }
+
 
     public void OrderChicken()
     {
-        OrderManager.Instance.AddOrder("Chicken");
+        if (windowCounter.IsFull())
+        {
+            Debug.Log("Pick up items from counter before you can make new orders!");
+            CloseOrderUI();
+            return;
+        }
+
+        chefStation.EnqueueOrder(FoodType.Chicken);
         CloseOrderUI();
     }
 
+
     public void OrderBurger()
     {
-        OrderManager.Instance.AddOrder("Burger");
+        if (windowCounter.IsFull())
+        {
+            Debug.Log("Pick up items from counter before you can make new orders!");
+            CloseOrderUI();
+            return;
+        }
+
+        chefStation.EnqueueOrder(FoodType.Burger);
         CloseOrderUI();
     }
+
 }

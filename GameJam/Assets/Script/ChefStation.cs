@@ -1,11 +1,16 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ChefStation : MonoBehaviour
 {
-    [Header("Cooking Task Setup")]
-    public GameObject cookingTaskPrefab;
-    public Transform cookingTaskHolder;
+    [Header("Cooking Queue")]
+    private Queue<FoodType> orderQueue = new Queue<FoodType>();
+
+    [Header("Cooking UI")]
+    public Transform cookingUIParent;      // Parent for the small cooking icons
+    public GameObject cookingTaskUIPrefab; // Prefab with circular fill
+
+    public float uiSpacing = 160f;         // Distance between icons
 
     [Header("Food Icons")]
     public Sprite soupIcon;
@@ -17,71 +22,83 @@ public class ChefStation : MonoBehaviour
     public float chickenTime = 5f;
     public float burgerTime = 4f;
 
-    private List<FoodCookingTask> activeTasks = new List<FoodCookingTask>();
+    [Header("Counter")]
+    public WindowCounter windowCounter;    // Where finished food appears
 
-    private float nextOrderCheckTime = 0f;
-    private float checkDelay = 0.5f;
+    private List<CookingTaskUI> activeTasks = new List<CookingTaskUI>();
 
-    private void Update()
+    // Called by OrderUIController
+    public void EnqueueOrder(FoodType type)
     {
-        if (Time.time >= nextOrderCheckTime)
+        orderQueue.Enqueue(type);
+        StartNextOrdersIfPossible();
+    }
+
+    // For now: we start a cooking task for every order immediately
+    private void StartNextOrdersIfPossible()
+    {
+        while (orderQueue.Count > 0)
         {
-            TryStartNextOrder();
-            nextOrderCheckTime = Time.time + checkDelay;
+            FoodType next = orderQueue.Dequeue();
+            CreateCookingTask(next);
         }
     }
 
-    void TryStartNextOrder()
+    private void CreateCookingTask(FoodType type)
     {
-        if (OrderManager.Instance.pendingOrders.Count == 0)
-            return;
+        GameObject go = Instantiate(cookingTaskUIPrefab, cookingUIParent);
+        CookingTaskUI task = go.GetComponent<CookingTaskUI>();
 
-        string nextFood = OrderManager.Instance.pendingOrders.Dequeue();
+        float duration = GetCookingTime(type);
+        Sprite icon = GetIcon(type);
 
-        GameObject uiGO = Instantiate(cookingTaskPrefab, cookingTaskHolder);
-        FoodCookingTask task = uiGO.GetComponent<FoodCookingTask>();
-        task.foodType = nextFood;
-
-        // Apply correct food icon
-        switch (nextFood)
-        {
-            case "Soup":
-                task.foodIcon.sprite = soupIcon;
-                task.cookingTime = soupTime;
-                break;
-
-            case "Chicken":
-                task.foodIcon.sprite = chickenIcon;
-                task.cookingTime = chickenTime;
-                break;
-
-            case "Burger":
-                task.foodIcon.sprite = burgerIcon;
-                task.cookingTime = burgerTime;
-                break;
-        }
+        task.Init(this, type, duration, icon);
 
         activeTasks.Add(task);
-        RefreshUIPositions();
-
-        task.BeginCooking(this);
+        RefreshTaskPositions();
     }
 
-    public void OnCookingFinished(string foodType, FoodCookingTask task)
+    private float GetCookingTime(FoodType type)
+    {
+        switch (type)
+        {
+            case FoodType.Soup: return soupTime;
+            case FoodType.Chicken: return chickenTime;
+            case FoodType.Burger: return burgerTime;
+        }
+        return 3f;
+    }
+
+    private Sprite GetIcon(FoodType type)
+    {
+        switch (type)
+        {
+            case FoodType.Soup: return soupIcon;
+            case FoodType.Chicken: return chickenIcon;
+            case FoodType.Burger: return burgerIcon;
+        }
+        return null;
+    }
+
+    // Called by CookingTaskUI when finished
+    public void NotifyTaskFinished(CookingTaskUI task, FoodType type)
     {
         activeTasks.Remove(task);
-        RefreshUIPositions();
+        RefreshTaskPositions();
 
-        // TODO: here we call WindowCounter later
-        Debug.Log(foodType + " finished cooking!");
+        // Spawn finished food on the window counter
+        if (windowCounter != null)
+        {
+            windowCounter.SpawnFinishedFood(type);
+        }
     }
 
-    void RefreshUIPositions()
+    private void RefreshTaskPositions()
     {
         for (int i = 0; i < activeTasks.Count; i++)
         {
             RectTransform rt = activeTasks[i].GetComponent<RectTransform>();
-            rt.anchoredPosition = new Vector2(i * 140f, 0);
+            rt.anchoredPosition = new Vector2(i * uiSpacing, 0f);
         }
     }
 }
