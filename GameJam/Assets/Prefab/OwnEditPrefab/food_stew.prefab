@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4227720355433474807}
-  - component: {fileID: 8841848791668848496}
+  - component: {fileID: 936121809668494754}
   m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
@@ -26,13 +26,13 @@ Transform:
   m_GameObject: {fileID: 1058315964937839181}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000001545431, y: -0.7071068, z: 0.00000001545431, w: 0.7071068}
-  m_LocalPosition: {x: 2.1161222, y: -0.15, z: 0.02}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.006, y: 0.165, z: 0.004}
+  m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1171809688770759270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8841848791668848496
+--- !u!65 &936121809668494754
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.97863114, y: 0.4553889, z: 0.58575034}
-  m_Center: {x: -0.024933696, y: 0.29996234, z: 0.0141224265}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4164132378825355920
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +186,7 @@ MonoBehaviour:
   correctResultPrefab: {fileID: 0}
   poisonResultPrefab: {fileID: 0}
   correctOrder: []
+  ownerWindow: {fileID: 0}
 --- !u!65 &676793601911080539
 BoxCollider:
   m_ObjectHideFlags: 0
