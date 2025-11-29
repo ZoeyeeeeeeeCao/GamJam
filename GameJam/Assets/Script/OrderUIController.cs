@@ -31,12 +31,12 @@ public class OrderUIController : MonoBehaviour
     // These will be called by button OnClick in the Inspector
     public void OrderSoup()
     {
-        /*if (windowCounter.IsFull())
+        if (windowCounter.IsFull())
         {
             Debug.Log("Pick up items from counter before you can make new orders!");
             CloseOrderUI();
             return;
-        }*/
+        }
 
         chefStation.EnqueueOrder(FoodType.Soup);
         CloseOrderUI();
@@ -45,12 +45,12 @@ public class OrderUIController : MonoBehaviour
 
     public void OrderChicken()
     {
-        /*if (windowCounter.IsFull())
+        if(windowCounter.IsFull())
         {
             Debug.Log("Pick up items from counter before you can make new orders!");
             CloseOrderUI();
             return;
-        }*/
+        }
 
         chefStation.EnqueueOrder(FoodType.Chicken);
         CloseOrderUI();
@@ -59,12 +59,12 @@ public class OrderUIController : MonoBehaviour
 
     public void OrderBurger()
     {
-        /*if (windowCounter.IsFull())
+        if(windowCounter.IsFull())
         {
             Debug.Log("Pick up items from counter before you can make new orders!");
             CloseOrderUI();
             return;
-        }*/
+        }
 
         chefStation.EnqueueOrder(FoodType.Burger);
         CloseOrderUI();

@@ -13,4 +13,9 @@ public class FoodItem : MonoBehaviour
 
     [Header("正确的处理顺序（例如 ABC）")]
     public string[] correctOrder;            // 半成品用，成品可以留空
+
+    [HideInInspector]
+    public WindowCounter ownerWindow; 
+
+
 }

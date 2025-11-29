@@ -5392,6 +5392,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5536756226784957013, guid: 31d6dbcdddd69ce4d9298b340d33f123, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e6c495fac54a911488b25458e2643b1f, type: 2}
     - target: {fileID: 5642284697479207652, guid: 31d6dbcdddd69ce4d9298b340d33f123, type: 3}
       propertyPath: dropClip
       value: 

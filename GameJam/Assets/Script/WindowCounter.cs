@@ -13,23 +13,24 @@ public class WindowCounter : MonoBehaviour
 
     private List<GameObject> currentFoods = new List<GameObject>();
 
-    /*public bool IsFull()
+    public bool IsFull()
     {
         return currentFoods.Count >= foodSlots.Length;
-    }*/
+    }
 
     public void SpawnFinishedFood(FoodType type)
     {
-        /*if (IsFull())
-        {
-            Debug.LogWarning("WindowCounter is full! Can't spawn more food.");
-            return;
-        }*/
-
         GameObject prefabToSpawn = GetPrefab(type);
         if (prefabToSpawn == null)
         {
             Debug.LogWarning("No prefab set for " + type);
+            return;
+        }
+
+        
+        if (currentFoods.Count >= foodSlots.Length)
+        {
+            Debug.LogWarning("WindowCounter is full! Can't spawn more food.");
             return;
         }
 
@@ -38,23 +39,18 @@ public class WindowCounter : MonoBehaviour
         GameObject foodObj = Instantiate(prefabToSpawn, slot.position, slot.rotation);
         foodObj.transform.SetParent(slot);
 
-        // ⭐⭐⭐ 核心：保证 FoodItem.foodPrefabId 指向“资产 prefab”，不是 Clone
         var item = foodObj.GetComponent<FoodItem>();
         if (item == null)
-        {
-            item = foodObj.AddComponent<FoodItem>();   // 如果 prefab 上没挂，就现场补一个
-        }
+            item = foodObj.AddComponent<FoodItem>();
 
-        // 用来给顾客判断的 ID → 一律写成我们这次生成用的 prefab 资产
         item.foodPrefabId = prefabToSpawn;
 
-        // 如果这些成品不需要再去毒桌加工，可以把其它字段留空，让别的系统无视它
-        // item.correctResultPrefab = null;
-        // item.poisonResultPrefab  = null;
-        // item.correctOrder        = null;
+        // ⭐⭐ 关键：告诉食物“你是这个窗口生的”
+        item.ownerWindow = this;
 
         currentFoods.Add(foodObj);
     }
+
 
 
     private GameObject GetPrefab(FoodType type)
@@ -73,13 +69,17 @@ public class WindowCounter : MonoBehaviour
     {
         if (currentFoods.Contains(foodObj))
         {
+            // 1. 从列表里移除
             currentFoods.Remove(foodObj);
-            Destroy(foodObj);
 
-            // Re-pack foods into slots so they shift left visually
+            // 2. 不要 Destroy，让这份食物继续存在（会被玩家拿在手上）
+            // Destroy(foodObj);   // ← 把这一行删掉！
+
+            // 3. 重新整理剩下食物的位置（左移）
             RepackSlots();
         }
     }
+
 
     private void RepackSlots()
     {

@@ -69,6 +69,12 @@ public class PlayerCarryFood : MonoBehaviour
         heldFood = foodInRange;
         foodInRange = null;
 
+
+        if (heldFood.ownerWindow != null)
+        {
+            heldFood.ownerWindow.RemoveFood(heldFood.gameObject);
+            heldFood.ownerWindow = null;  // 拿到手上之后，就不再属于窗口
+        }
         // 把食物挂到手上
         heldFood.transform.SetParent(holdPoint);
         heldFood.transform.localPosition = Vector3.zero;
