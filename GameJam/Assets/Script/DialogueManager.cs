@@ -10,6 +10,7 @@ public class DialogueLine
     public string text;
 }
 
+
 public class DialogueManager : MonoBehaviour
 {
     [Header("UI 引用")]
@@ -23,6 +24,8 @@ public class DialogueManager : MonoBehaviour
     public Sprite playerPortrait;
 
     // 当前对话数据
+    public StartTutorialOnDialogueEnd tutorialStarter;
+
     private DialogueLine[] lines;
     private int index;
 
@@ -109,10 +112,16 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
-        isActive = false;
-        lines = null;
-
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
+
+        if (tutorialStarter != null)
+        {
+            tutorialStarter.BeginTutorial();
+        }
+        else
+        {
+            Debug.LogWarning("[DialogueManager] tutorialStarter 为空，没有启动教程。");
+        }
     }
 }
