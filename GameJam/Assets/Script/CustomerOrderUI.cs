@@ -156,55 +156,44 @@ public class CustomerOrderUI : MonoBehaviour
     }
     public void PlayReaction(CustomerReactionType reaction)
     {
+        var customer = GetComponentInParent<CustomerAI>();
+        if (customer == null)
+        {
+            Debug.LogError("No CustomerAI found!");
+            return;
+        }
 
         switch (reaction)
         {
             case CustomerReactionType.Reaction1:
-                Debug.Log("CUSTOMER REACTION");
-                // TODO: 播放开心动画
-                // TODO: 播放开心音效
-                // TODO: 改表情UI，例如变成笑脸
+                customer.PlayHappyReaction();
                 break;
 
             case CustomerReactionType.Reaction2:
-                Debug.Log("CUSTOMER REACTION");
-                // TODO: 播放倒地动画（比如播放 RagDoll）
-                // TODO: 播放惊叫/死亡音效
-                // TODO: UI 显示骷髅头图标
-
+                customer.PlayDeathReaction();
                 break;
 
             case CustomerReactionType.Reaction3:
-                Debug.Log("CUSTOMER REACTION");
-                // TODO: 播放生气动画（跺脚/生气表情）
-                // TODO: 播放生气音效
-                // TODO: UI 出现 angry bubble
-
+                customer.PlayAngryReaction();
                 break;
         }
 
-        // 如果你想让顾客反应后离开，就在这里调用：
-        // 顾客完成反应后离开
-
-        // 顾客完成反应后离开
-        StartCoroutine(CustomerLeaveRoutine(reaction));
-
-
-
+        // After reacting, wait and leave
+        StartCoroutine(CustomerLeaveRoutine(reaction, 5f)); //customer leaves after 5 seconds of recieving the food
     }
 
-    private IEnumerator CustomerLeaveRoutine(CustomerReactionType reaction)
-    {
-        // Give them 1 second to react (happy / angry / poisoned)
-        yield return new WaitForSeconds(1f);
 
-        // Find customer root
+    private IEnumerator CustomerLeaveRoutine(CustomerReactionType reaction, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
         var customer = GetComponentInParent<CustomerAI>();
         if (customer != null)
         {
             customer.LeaveRestaurant();
         }
     }
+
 
 
 }

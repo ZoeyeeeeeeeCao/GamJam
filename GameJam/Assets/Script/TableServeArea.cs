@@ -45,13 +45,13 @@ public class TableServeArea : MonoBehaviour
             switch (reaction)
             {
                 case CustomerReactionType.Reaction1:
-                    Debug.Log("Reaction1：上对菜，顾客开心 😊");
+                    Debug.Log("Reaction1：上对菜，顾客开心 😊"); //happy
                     break;
                 case CustomerReactionType.Reaction2:
-                    Debug.Log("Reaction2：下毒菜，顾客倒地 😵");
+                    Debug.Log("Reaction2：下毒菜，顾客倒地 😵"); //died
                     break;
                 case CustomerReactionType.Reaction3:
-                    Debug.Log("Reaction3：上错菜，顾客生气 😡");
+                    Debug.Log("Reaction3：上错菜，顾客生气 😡"); //angry
                     break;
                 default:
                     Debug.Log("顾客还没点单 / 无效上菜");

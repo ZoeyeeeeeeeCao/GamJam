@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +11,21 @@ public class CustomerAI : MonoBehaviour
     private bool isSitting = false;
 
     public Transform exitPoint; //spawnpoint, which is the restaurant exit!!
+
+    private bool isLeaving = false;
+
+    [Header("Face Material Swap")]
+    public SkinnedMeshRenderer faceRenderer;
+    public Material happyFace;
+    public Material angryFace;
+    public Material deadFace;
+
+    [Header("Animator Reaction Triggers")]
+    public string happyTrigger = "Happy";
+    public string angryTrigger = "Angry";
+    public string deadTrigger = "Dead";
+
+
 
     private void Awake()
     {
@@ -31,14 +46,21 @@ public class CustomerAI : MonoBehaviour
 
     private void Update()
     {
+        // If leaving, do nothing
+        if (isLeaving)
+            return;
+
+        // If no seat or already sitting, stop
         if (seat == null || isSitting)
             return;
 
+        // Sitting detection ONLY for initial seating
         if (!agent.pathPending && agent.remainingDistance <= 0.1f)
         {
             SitInstantly();
         }
     }
+
 
     private void SitInstantly()
     {
@@ -80,12 +102,17 @@ public class CustomerAI : MonoBehaviour
 
         if (agent == null) return;
 
-        // Customer is no longer sitting
         isSitting = false;
+        isLeaving = true;
 
-        // Reset seat occupation
-        if (seat != null)
-            seat.isOccupied = false;
+        // ⭐ store seat before nulling it
+        Seat oldSeat = seat;
+
+        seat = null;   // prevents SitInstantly from triggering again
+
+        // ⭐ free seat properly
+        if (oldSeat != null)
+            oldSeat.isOccupied = false;
 
         // Stop sitting animation and play walk animation
         if (animator != null)
@@ -94,41 +121,91 @@ public class CustomerAI : MonoBehaviour
             animator.SetBool("IsMoving", true);
         }
 
-        // Allow movement again
         agent.isStopped = false;
 
-        // Walk toward exit point
         if (exitPoint != null)
-        {
             agent.SetDestination(exitPoint.position);
-            Debug.Log("Customer walking toward exit: " + exitPoint.position);
-        }
-        else
-        {
-            Debug.LogWarning("EXIT POINT IS NULL!");
-        }
 
         StartCoroutine(DestroyAfterReachingExit());
     }
 
 
+
     private IEnumerator DestroyAfterReachingExit()
     {
-        // Wait until path becomes valid
         while (agent.pathPending)
             yield return null;
 
-        // Wait until agent moves (remainingDistance updates)
-        while (agent.remainingDistance == Mathf.Infinity)
-            yield return null;
-
-        // Wait until customer reaches the exit
         while (agent.remainingDistance > 0.2f)
             yield return null;
 
         yield return new WaitForSeconds(0.2f);
 
+        // ⭐ FREE SEAT ONLY NOW
+        if (seat != null)
+            seat.isOccupied = false;
+
         Destroy(gameObject);
     }
+
+    public void PlayHappyReaction()
+    {
+        PrepareForReaction();
+        SetFaceMaterial(happyFace);
+        animator.SetTrigger(happyTrigger);
+    }
+
+    public void PlayAngryReaction()
+    {
+        PrepareForReaction();
+        SetFaceMaterial(angryFace);
+        animator.SetTrigger(angryTrigger);
+    }
+
+    public void PlayDeathReaction()
+    {
+        PrepareForReaction();
+        SetFaceMaterial(deadFace);
+        animator.SetTrigger(deadTrigger);
+    }
+
+
+
+    private void SetFaceMaterial(Material mat)
+    {
+        if (faceRenderer != null && mat != null)
+        {
+            var mats = faceRenderer.materials;
+            if (mats.Length > 1)
+            {
+                mats[1] = mat;   // FACE is Element 1
+                faceRenderer.materials = mats;
+            }
+        }
+    }
+
+    private void PrepareForReaction()
+    {
+        // Fully exit sitting state
+        isSitting = false;
+
+        // Prevent SitInstantly() from ever being called again
+        seat = null;
+
+        // Ensure we don't auto-walk
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+        }
+
+        // Force animator out of sitting state
+        if (animator != null)
+        {
+            animator.SetBool("IsSitting", false);
+            animator.SetBool("IsMoving", false);
+        }
+    }
+
 
 }

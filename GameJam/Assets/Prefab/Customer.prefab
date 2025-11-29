@@ -190,7 +190,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.5}
+  m_AnchoredPosition: {x: 0, y: 1.632}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6527242456303987577
@@ -391,6 +391,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exitPoint: {fileID: 4775129286973234358, guid: e386daa71896257419b082e684ce5bb2, type: 3}
+  faceRenderer: {fileID: 7298018552446896283}
+  happyFace: {fileID: 2100000, guid: eb0abc418e0e4af459f4d17d07e073d9, type: 2}
+  angryFace: {fileID: 2100000, guid: e6c495fac54a911488b25458e2643b1f, type: 2}
+  deadFace: {fileID: 2100000, guid: 333af43e3b606794f959486493f019d4, type: 2}
+  happyTrigger: Happy
+  angryTrigger: Angry
+  deadTrigger: Dead
 --- !u!114 &3221281141227003419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,5 +644,10 @@ PrefabInstance:
 --- !u!4 &4718359833746897431 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
+  m_PrefabInstance: {fileID: 5111658387134291452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &7298018552446896283 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6649697836553743001, guid: f9f65d468731bcf4fba794d064637f84, type: 3}
   m_PrefabInstance: {fileID: 5111658387134291452}
   m_PrefabAsset: {fileID: 0}
