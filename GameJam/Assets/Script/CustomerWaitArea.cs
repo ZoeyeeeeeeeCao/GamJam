@@ -117,4 +117,5 @@ public class CustomerWaitArea : MonoBehaviour
 
         isCounting = false;
     }
+
 }

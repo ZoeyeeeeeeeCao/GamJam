@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class TableServeArea : MonoBehaviour
 {
@@ -56,10 +57,26 @@ public class TableServeArea : MonoBehaviour
                     Debug.Log("顾客还没点单 / 无效上菜");
                     break;
             }
+
+            customerOrderUI.PlayReaction(reaction);
         }
         else
         {
             Debug.LogWarning("这张桌子当前没有顾客，或 CustomerWaitArea 没检测到顾客。");
         }
+
+        // After evaluating reaction, add this:
+        StartCoroutine(DestroyFoodAfterSeconds(food, 3f)); // food disappears after 3 seconds
+
     }
+
+    private IEnumerator DestroyFoodAfterSeconds(FoodItem food, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (food != null)
+            Destroy(food.gameObject);
+    }
+
+
 }
