@@ -2504,6 +2504,7 @@ MonoBehaviour:
   foodToKitchen: {fileID: 923402326}
   spawnPoint1: {fileID: 1304633481}
   spawnPoint2: {fileID: 1317361679}
+  spawnPoint3: {fileID: 1575999106}
   customerWithTablePrefab: {fileID: 2206874238970782710, guid: 3b2cfc5f4854f7f46a631337feb11e06, type: 3}
   orderDeskPrefab: {fileID: 8153990943828159681, guid: 231693e4efe47734abd11284c3ffa417, type: 3}
   potionTablePrefab: {fileID: 4374334280954131177, guid: f352075e6aadb1442b712aa0daf72a30, type: 3}
@@ -3689,6 +3690,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43351964df6a5f246bc5782bab72aa06, type: 3}
+--- !u!1 &1575999105
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1575999106}
+  m_Layer: 0
+  m_Name: Point3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1575999106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575999105}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.67, y: 0.5018078, z: 10.55}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1591532183 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b51c912c0c07d754b8d74223ca1eaab6, type: 3}
@@ -6247,6 +6279,7 @@ SceneRoots:
   - {fileID: 4680754925365194083}
   - {fileID: 1248325667}
   - {fileID: 1304633481}
+  - {fileID: 1575999106}
   - {fileID: 1317361679}
   - {fileID: 1263668687}
   - {fileID: 2103485815}

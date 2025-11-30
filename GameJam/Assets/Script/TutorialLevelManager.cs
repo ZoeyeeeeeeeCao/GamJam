@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;   // 记得引用 TextMeshPro
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class TutorialLevelManager : MonoBehaviour
 {
@@ -33,8 +34,9 @@ public class TutorialLevelManager : MonoBehaviour
     public GameObject foodToKitchen;      // 场景中那块要搬走的食物或箱子
 
     [Header("生成点（空物体）")]
-    public Transform spawnPoint1;         // 用于 Task3 的顾客 & Task4/10 的桌子/点单台
+    public Transform spawnPoint1;         // 用于 Task3 的顾客 & Task4/10 的桌子
     public Transform spawnPoint2;         // 用于 Task8 的毒药台
+    public Transform spawnPoint3;          //ordercounter
 
     [Header("教程用 Prefab")]
     public GameObject customerWithTablePrefab;  // 顾客+桌子
@@ -61,6 +63,8 @@ public class TutorialLevelManager : MonoBehaviour
     private bool started = false;
 
     private float task10Timer = 0f;
+
+
 
     private void Start()
     {
@@ -212,7 +216,7 @@ public class TutorialLevelManager : MonoBehaviour
                 break;
 
             case Step.Task4_OrderDesk:
-                taskText.text = "Task 4:\nGo to the order counter and choose the food";
+                taskText.text = "Task 4:\nGo to the order counter and choose the food.\nPress E to pick it up.";
                 break;
 
             case Step.Task5_PickupFood:
@@ -325,7 +329,7 @@ public class TutorialLevelManager : MonoBehaviour
     //==============================
     private void SpawnOrderDesk()
     {
-        if (orderDeskPrefab == null || spawnPoint1 == null)
+        if (orderDeskPrefab == null || spawnPoint3 == null)
         {
             Debug.LogWarning("Tutorial: orderDeskPrefab 或 spawnPoint1 没设置。");
             return;
@@ -336,8 +340,8 @@ public class TutorialLevelManager : MonoBehaviour
 
         currentOrderDesk = Instantiate(
             orderDeskPrefab,
-            spawnPoint1.position,
-            spawnPoint1.rotation
+            spawnPoint3.position,
+            spawnPoint3.rotation
         );
     }
 
@@ -507,8 +511,10 @@ public class TutorialLevelManager : MonoBehaviour
         if (taskPanel != null)
             taskPanel.SetActive(false);
 
-        // 这里以后可以加 LoadScene / 解锁正式关卡 等
+        // 加载名为 "Potion" 的 Scene
+        SceneManager.LoadScene("Potion");
     }
+
     private IEnumerator DelayedDestroyCustomerAndNextStep()
     {
         // ✨ 等待 3 秒

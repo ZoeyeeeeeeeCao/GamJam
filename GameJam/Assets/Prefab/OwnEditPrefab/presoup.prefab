@@ -159,9 +159,10 @@ MonoBehaviour:
   correctResultPrefab: {fileID: 4164132378825355920, guid: e8c32162649a0bf4f8f89c24aea7369d, type: 3}
   poisonResultPrefab: {fileID: 960453190774089637, guid: 197721476a2d78f4eb6a6a5b721c1659, type: 3}
   correctOrder:
-  - A
-  - B
   - C
+  - B
+  - A
+  ownerWindow: {fileID: 0}
 --- !u!54 &8434692054183095791
 Rigidbody:
   m_ObjectHideFlags: 0
