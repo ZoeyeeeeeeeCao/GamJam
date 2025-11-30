@@ -18,6 +18,7 @@ public class StartTutorialOnDialogueEnd : MonoBehaviour
             else
             {
                 Debug.Log("[StartTutorialOnDialogueEnd] ×Ô¶¯ÕÒµ½ TutorialLevelManager¡£");
+
             }
         }
     }
@@ -33,6 +34,7 @@ public class StartTutorialOnDialogueEnd : MonoBehaviour
             return;
         }
 
+        BGMManager.Instance.FadeToBGM2(1.2f);
         tutorial.StartTutorial();
     }
 }
